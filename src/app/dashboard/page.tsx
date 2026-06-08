@@ -1,8 +1,9 @@
 "use client";
-
+import { LogOut } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   Search, Bell, User, Plus, Download,
   Folder, MoreVertical, Clock,
@@ -11,6 +12,13 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Dashboard() {
+
+  const supabase = createClient();
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    router.push("/login");
+  }
   const router = useRouter();
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
   const [selectedFramework, setSelectedFramework] = useState("Next.js");
@@ -24,7 +32,8 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen text-white flex flex-col" style={{ background: "#020e08" }}>
       {/* Ambient aurora */}
-      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0,
+      <div className="fixed inset-0 pointer-events-none" style={{
+        zIndex: 0,
         background: "radial-gradient(ellipse 60% 40% at 30% 20%, rgba(0,200,150,0.04) 0%, transparent 60%)",
       }} />
 
@@ -53,6 +62,13 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="flex items-center gap-4">
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm text-white hover:border-red-500/50 transition"
+          >
+            <LogOut className="h-4 w-4" />
+            Logout
+          </button>
           <button className="p-2 relative transition-colors" style={{ color: "rgba(255,255,255,0.4)" }}>
             <Bell className="w-5 h-5" />
             <span className="absolute top-1.5 right-2 w-2 h-2 rounded-full" style={{ background: "#00C896" }} />
